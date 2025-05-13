@@ -118,6 +118,32 @@ class Hashmap {
         this.backets.length = 0;
         this.counter = 0;
     }
+
+    keys() {
+        const keysArray = [];
+        this.backets.forEach(arr => {
+            if (arr) {
+                arr.forEach(obj => {
+                    keysArray.push(obj.key)
+                })
+            }
+        })
+        return keysArray
+    }
+
+    values() {
+        const valuesArray = [];
+        this.backets.forEach(arr => {
+            if (arr) {
+                arr.forEach(obj => {
+                    valuesArray.push(obj.value)
+                })
+            }
+        })
+        return valuesArray
+    }
+
+    
 }
 
 const mymap = new Hashmap("mymap")
@@ -150,9 +176,12 @@ console.log(mymap)
     }
     i++;
  })
- mymap.clear(); 
- mymap.length();
- console.log(mymap.backets)
+//  mymap.clear(); 
+//  mymap.length();
+//  console.log(mymap.backets)
+
+ console.log(mymap.keys())
+ console.log(mymap.values())
 // console.log( mymap.backets[0] )
 // console.log( mymap.backets[1] )
 // console.log( mymap.backets[2] )
