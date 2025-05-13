@@ -143,7 +143,19 @@ class Hashmap {
         return valuesArray
     }
 
-    
+    entries() {
+        const entriesArray = [];
+        this.backets.forEach(arr => {
+            if (arr) {
+                arr.forEach(obj => {
+                    let objArray = [obj.key, obj.value]
+                    entriesArray.push(objArray)
+            })
+        }})
+        console.log(entriesArray[5])
+        return entriesArray
+    }
+        
 }
 
 const mymap = new Hashmap("mymap")
@@ -182,6 +194,9 @@ console.log(mymap)
 
  console.log(mymap.keys())
  console.log(mymap.values())
+ console.log(mymap.entries())
+//  console.log(entriesArray[0])
+
 // console.log( mymap.backets[0] )
 // console.log( mymap.backets[1] )
 // console.log( mymap.backets[2] )
