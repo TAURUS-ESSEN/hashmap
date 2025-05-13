@@ -1,11 +1,11 @@
 'use strict'
 
-class Hashmap {
+export default class HashMap {
     constructor (name){
         this.mapname = name;
         this.loadfactor = 0.75;
         this.capacity = 16;
-        this.backets = []; 
+        this.buckets = []; 
         this.counter = 0;
     }
     
@@ -18,41 +18,36 @@ class Hashmap {
         return hashCode;
     }
 
-    set(mykey, myvalue) {
-        let index = this.hash(mykey);
-        if (index < 0 || index >= this.capacity) {
-            throw new Error("Trying to access index out of bounds");
-        }
-        else {
-            if (!this.backets[index]) {
-                this.backets[index] = [];
-                this.backets[index].push({ key: mykey, value: myvalue});
-                this.counter++;
-            }
-            else if (this.backets[index].length > 0) {
-                let result = this.backets[index].find(value => value.key === mykey);
-                if (result) {
-                    console.log("COLLISION!!!")
-                    result.value = myvalue;
-                }
-                else {
-                    this.backets[index].push({ key: mykey, value: myvalue});
-                    this.counter++;
-                }
-            }
-            this.checkCapacity();
-        }
+   set(mykey, myvalue) {
+    let index = this.hash(mykey);
+    if (index < 0 || index >= this.capacity) {
+        throw new Error("Trying to access index out of bounds");
     }
+
+    if (!this.buckets[index]) {
+        this.buckets[index] = [];
+    }
+
+    let existing = this.buckets[index].find(item => item.key === mykey);
+    if (existing) {
+        existing.value = myvalue;
+    } else {
+        this.buckets[index].push({ key: mykey, value: myvalue });
+        this.counter++;
+    }
+
+    this.checkCapacity();
+}
 
     get(mykey) {
         let index = this.hash(mykey);
-        return this.backets[index].find(value => value.key===mykey);
+        return this.buckets[index].find(value => value.key===mykey);
     }
 
     has(mykey) {
         let index = this.hash(mykey);
-        if (!this.backets[index]) return false;
-        return  this.backets[index].some(value => value.key===mykey)
+        if (!this.buckets[index]) return false;
+        return  this.buckets[index].some(value => value.key===mykey)
     }
 
     checkCapacity() {
@@ -65,23 +60,23 @@ class Hashmap {
 
     resize() {
         this.capacity =  this.capacity * 2;
-        console.log("новая вместиость?", this.capacity )
-        let tempbackets = [];
+        console.log("new capacity = ", this.capacity )
+        let tempbuckets = [];
             console.log("------------------------------------");
-        console.log("ПЕРЕХЕШИРОВАНИЕ")
+        console.log("RESIZE")
             console.log("------------------------------------");
-        this.backets.forEach(arr => {
+        this.buckets.forEach(arr => {
             if (arr.length > 0) {
                 arr.forEach(obj => {
                     let index = this.hash(obj.key);
-                if (!tempbackets[index]) {
-                    tempbackets[index] = [];
+                if (!tempbuckets[index]) {
+                    tempbuckets[index] = [];
                 }
-                    tempbackets[index].push({ key: obj.key, value: obj.value});
+                    tempbuckets[index].push({ key: obj.key, value: obj.value});
                 })
             }
         })
-        this.backets = tempbackets;
+        this.buckets = tempbuckets;
     }
 
     length() {
@@ -89,13 +84,15 @@ class Hashmap {
     }
 
     clear() {
-        this.backets.length = 0;
+        this.buckets.length = 0;
+        this.buckets = [];
         this.counter = 0;
+        this.capacity = 16;
     }
 
     keys() {
         const keysArray = [];
-        this.backets.forEach(arr => {
+        this.buckets.forEach(arr => {
             if (arr) {
                 arr.forEach(obj => {
                     keysArray.push(obj.key)
@@ -107,7 +104,7 @@ class Hashmap {
 
     values() {
         const valuesArray = [];
-        this.backets.forEach(arr => {
+        this.buckets.forEach(arr => {
             if (arr) {
                 arr.forEach(obj => {
                     valuesArray.push(obj.value)
@@ -119,7 +116,7 @@ class Hashmap {
 
     entries() {
         const entriesArray = [];
-        this.backets.forEach(arr => {
+        this.buckets.forEach(arr => {
             if (arr) {
                 arr.forEach(obj => {
                     let objArray = [obj.key, obj.value]
@@ -129,39 +126,3 @@ class Hashmap {
         return entriesArray
     }
 }
-
-const mymap = new Hashmap("mymap")
-console.log(mymap)
-
- mymap.set('apple', 'red');
- mymap.set('apple', 'red2');
- mymap.set('banana', 'yellow')
- mymap.set('carrot', 'orange')
- mymap.set('dog', 'brown')
- mymap.set('elephant', 'gray')
- mymap.set('frog', 'green')
- mymap.set('grape', 'purple')
- mymap.set('hat', 'black')
- mymap.set('ice cream', 'white')
- mymap.set('jacket', 'blue')
- mymap.set('kite', 'pink')
- mymap.set('lion', 'golden')
- console.log(mymap.get('apple'));
- console.log(mymap.has('jacket'));
- mymap.set('lion', 'golden2')
- console.log(mymap.length());
-
-mymap.backets.forEach(arr => {
-    if (arr) {
-        arr.forEach(obj => {
-            console.log(obj)
-        })
-    }
-})
-
-console.log(mymap.keys())
-console.log(mymap.values())
-console.log(mymap.entries())
-mymap.clear(); 
-console.log(mymap.length());
-console.log(mymap.backets)

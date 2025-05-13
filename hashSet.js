@@ -1,11 +1,10 @@
 'use strict'
-
-class Hashset {
+export default class HashSet {
     constructor (name){
         this.setname = name;
         this.loadfactor = 0.75;
         this.capacity = 16;
-        this.backets = []; 
+        this.buckets = []; 
         this.counter = 0;
     }
     
@@ -19,34 +18,29 @@ class Hashset {
     }
 
     set(mykey) {
-        let index = this.hash(mykey);
-        if (index < 0 || index >= this.capacity) {
-            throw new Error("Trying to access index out of bounds");
-        }
-        else {
-            if (!this.backets[index]) {
-                this.backets[index] = [];
-                this.backets[index].push({ key: mykey});
-                this.counter++;
-            }
-            else {
-                    this.backets[index].push({ key: mykey});
-                    this.counter++;
-                }
-        }
-            this.checkCapacity();
-        
+    let index = this.hash(mykey);
+    if (index < 0 || index >= this.capacity) {
+        throw new Error("Trying to access index out of bounds");
     }
 
-    get(mykey) {
-        let index = this.hash(mykey);
-        return this.backets[index].find(value => value.key===mykey);
+    if (!this.buckets[index]) {
+        this.buckets[index] = [];
     }
+
+    let exists = this.buckets[index].some(value => value.key === mykey);
+    if (!exists) {
+        this.buckets[index].push({ key: mykey });
+        this.counter++;
+    }
+
+    this.checkCapacity();
+}
+
 
     has(mykey) {
         let index = this.hash(mykey);
-        if (!this.backets[index]) return false;
-        return  this.backets[index].some(value => value.key===mykey)
+        if (!this.buckets[index]) return false;
+        return  this.buckets[index].some(value => value.key===mykey)
     }
 
     checkCapacity() {
@@ -59,37 +53,38 @@ class Hashset {
 
     resize() {
         this.capacity =  this.capacity * 2;
-        console.log("новая вместиость?", this.capacity )
-        let tempbackets = [];
+        console.log("new capacity", this.capacity )
+        let tempbuckets = [];
             console.log("------------------------------------");
-        console.log("ПЕРЕХЕШИРОВАНИЕ")
-            console.log("------------------------------------");
-        this.backets.forEach(arr => {
+        console.log("RESIZE")
+        this.buckets.forEach(arr => {
             if (arr.length > 0) {
                 arr.forEach(obj => {
                     let index = this.hash(obj.key);
-                if (!tempbackets[index]) {
-                    tempbackets[index] = [];
+                if (!tempbuckets[index]) {
+                    tempbuckets[index] = [];
                 }
-                    tempbackets[index].push({ key: obj.key});
+                    tempbuckets[index].push({ key: obj.key});
                 })
             }
         })
-        this.backets = tempbackets;
+        this.buckets = tempbuckets;
     }
 
     length() {
-        return `Hashmap length: ${this.counter}`;
+        return `HashSet length: ${this.counter}`;
     }
 
     clear() {
-        this.backets.length = 0;
+        this.buckets.length = 0;
+        this.buckets = [];
         this.counter = 0;
+        this.capacity = 16;
     }
 
     keys() {
         const keysArray = [];
-        this.backets.forEach(arr => {
+        this.buckets.forEach(arr => {
             if (arr) {
                 arr.forEach(obj => {
                     keysArray.push(obj.key)
@@ -100,37 +95,3 @@ class Hashset {
     }
 
 }
-
-const myset = new Hashset("myset")
-console.log(myset)
-
- myset.set('apple', 'red');
- myset.set('apple', 'red2');
- myset.set('banana', 'yellow')
- myset.set('carrot', 'orange')
- myset.set('dog', 'brown')
- myset.set('elephant', 'gray')
- myset.set('frog', 'green')
- myset.set('grape', 'purple')
- myset.set('hat', 'black')
- myset.set('ice cream', 'white')
- myset.set('jacket', 'blue')
- myset.set('kite', 'pink')
- myset.set('lion', 'golden')
- console.log(myset.get('apple'));
- console.log(myset.has('jacket'));
- myset.set('lion', 'golden2')
- console.log(myset.length());
-
-myset.backets.forEach(arr => {
-    if (arr) {
-        arr.forEach(obj => {
-            console.log(obj)
-        })
-    }
-})
-
-console.log(myset.keys())
-myset.clear(); 
-console.log(myset.length());
-console.log(myset.backets)
