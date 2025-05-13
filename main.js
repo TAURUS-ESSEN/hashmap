@@ -14,8 +14,8 @@ class Hashmap {
     }
 
     hash(key) {
-        console.log("ACHTUNG", this.capacity)
         let hashCode = 0;
+        console.log("ПОКАЖИ МНЕ ВМЕСТИМОСТЬ", this.capacity)
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
             hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % this.capacity;
@@ -53,28 +53,22 @@ class Hashmap {
             }
             console.log("counter=", this.counter)
             this.checkCapacity();
-            // return "Added"
         }
     }
 
     get(mykey) {
         let index = this.hash(mykey);
         console.log("index get", index)
-
+        // return console.log(this.backets[index].find(value => value.key===mykey));
         return console.log(this.backets[index].find(value => value.key===mykey));
     }
 
     has(mykey) {
         let index = this.hash(mykey);
         console.log("index=", index)
-        let result = this.backets[index];
-        if (result) {
-            return "DA"
-        }
-        else {return "NET"}
-        // let result2 = this.backets[index].key === mykey ? true : false
-        // let result = this.backets[index].find(value => value.key===mykey)
-        return console.log(result)
+        if (!this.backets[index]) return false;
+              return console.log(this.backets[index].some(value => value.key===mykey));
+ 
     }
 
     checkCapacity() {
@@ -98,18 +92,12 @@ class Hashmap {
             console.log("------------------------------------");
         this.backets.forEach(arr => {
             if (arr.length > 0) {
-                console.log(arr)
                 arr.forEach(obj => {
-                    console.log(obj)
                     let index = this.hash(obj.key);
-                    console.log("NEWINDEX=", index)
                 if (!tempbackets[index]) {
-                    console.log("что в массиве по хэшированному индексу, жду undefined", tempbackets[index]);
                     tempbackets[index] = [];
-                    console.log("значение индекса > создан пустой массив , жду (0) = ", tempbackets[index]);
-                    tempbackets[index].push({ key: obj.key, value: obj.value});
-                    console.log("да что там вообще в этом значении?" , tempbackets[index]);
                 }
+                    tempbackets[index].push({ key: obj.key, value: obj.value});
                 })
             }
         })
@@ -122,8 +110,13 @@ class Hashmap {
         // return this.capacity
     }
 
-    viewDaten() {
-        return Hashmap.loadfactor;
+    length() {
+        return console.log(`Hashmap length: ${this.counter}`);
+    }
+
+    clear() {
+        this.backets.length = 0;
+        this.counter = 0;
     }
 }
 
@@ -144,6 +137,54 @@ console.log(mymap)
  mymap.set('kite', 'pink')
  mymap.set('lion', 'golden')
  mymap.get('apple')
-//  mymap.has('jacket')
+ mymap.has('jacket')
+ mymap.set('lion', 'golden2')
+ mymap.length();
 
+ let i=0;
+ mymap.backets.forEach(arr => {
+    if (arr) {
+        arr.forEach(obj => {
+            console.log(obj)
+        })
+    }
+    i++;
+ })
+ mymap.clear(); 
+ mymap.length();
+ console.log(mymap.backets)
+// console.log( mymap.backets[0] )
+// console.log( mymap.backets[1] )
+// console.log( mymap.backets[2] )
+// console.log( mymap.backets[3][0] )
+// console.log( mymap.backets[4][0] )
+// console.log( mymap.backets[5][0] )
+// console.log( mymap.backets[6] )
+// console.log( mymap.backets[7] )
+// console.log( mymap.backets[8] )
+// console.log( mymap.backets[9] )
+// console.log( mymap.backets[10] )
+// console.log( mymap.backets[11][0] )
+// console.log( mymap.backets[12] )
+// console.log( mymap.backets[13][0] )
+// console.log( mymap.backets[14][0] )
+// console.log( mymap.backets[15][0] )
+// console.log( mymap.backets[16] )
+// console.log( mymap.backets[17][0] )
+// console.log( mymap.backets[18] )
+// console.log( mymap.backets[19] )
+// console.log( mymap.backets[20] )
+// console.log( mymap.backets[21] )
+// console.log( mymap.backets[22] )
+// console.log( mymap.backets[23] )
+// console.log( mymap.backets[24] )
+// console.log( mymap.backets[25] )
+// console.log( mymap.backets[26][0] )
+// console.log( mymap.backets[27][0] )
+// console.log( mymap.backets[28][0] )
+// console.log( mymap.backets[28][1] )
+// console.log( mymap.backets[29] )
+// console.log( mymap.backets[30] )
+// console.log( mymap.backets[31] )
+// console.log( mymap.backets[32] )
 // console.log(mymap.set('apple', 'red'))
